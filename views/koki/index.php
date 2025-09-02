@@ -10,7 +10,7 @@ use yii\widgets\Pjax;
 /** @var app\models\SearchUser $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Data Staf';
+$this->title = 'Data Koki';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-index">

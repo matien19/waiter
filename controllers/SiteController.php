@@ -115,12 +115,14 @@ class SiteController extends Controller
 
         // Redirect based on role
         if ($user->role === 'admin') {
-            return $this->redirect(['beranda/index']);
-        } elseif ($user->role === 'calon_siswa' || $user->role === 'siswa') {
-            return $this->redirect(['beranda/siswa']);
-        } else {
-            return $this->goBack();
-        }
+                return $this->redirect(['beranda/index']);
+            } elseif ($user->role === 'kasir') {
+                return $this->redirect(['beranda/kasir']);
+            } elseif ($user->role === 'koki') {
+                return $this->redirect(['beranda/koki']);
+            } else {
+                return $this->goBack();
+            }
         }
 
         Yii::$app->session->setFlash('error', 'Username atau password salah.');
