@@ -33,6 +33,9 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <?php
+
+                                            use app\models\KategoriModel;
+
             $userRole = Yii::$app->user->identity->role ?? '';
             $menuItems = [];
             if ($userRole == 'admin') {
@@ -60,6 +63,12 @@
                                 'iconStyle' => 'far',
                                 'url' => ['meja/index'],
                                 'active' => Yii::$app->controller->id === 'meja',
+                            ],
+                            [
+                                'label' => 'Kategori',
+                                'iconStyle' => 'far',
+                                'url' => ['kategori/index'],
+                                'active' => Yii::$app->controller->id === 'kategori',
                             ],
                             // [
                             //     'label' => 'Kategori',
