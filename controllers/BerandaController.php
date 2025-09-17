@@ -71,5 +71,9 @@ class BerandaController extends Controller
     {
         return $this->render('/beranda/index');
     }
+    public function actionKoki()
+    {
+        return $this->render('/beranda/koki');
+    }
     
 }

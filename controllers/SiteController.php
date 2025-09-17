@@ -8,6 +8,8 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
+use app\models\MejaModel;
+use app\models\MenuModel;
 use app\models\User;
 
 class SiteController extends Controller
@@ -45,6 +47,19 @@ class SiteController extends Controller
     /**
      * {@inheritdoc}
      */
+    protected function getRedirectByRole($role)
+    {
+        switch ($role) {
+            case 'admin':
+                return ['beranda/index'];
+            case 'kasir':
+                return ['beranda/kasir'];
+            case 'koki':
+                return ['beranda/koki'];
+            default:
+                return $this->goHome(); // fallback
+        }
+    }
     public function actions()
     {
         $this->layout = 'main-menu';
@@ -60,36 +75,15 @@ class SiteController extends Controller
      *
      * @return string
      */
-    public function actionIndex($meja = null, $kategori = null)
+    public function actionIndex()
     {
                 
-        // Dummy Data
-        $mejaList = [
-            ['id' => 1, 'nama' => 'Meja 1'],
-            ['id' => 2, 'nama' => 'Meja 2'],
-            ['id' => 3, 'nama' => 'Meja 3'],
-            ['id' => 4, 'nama' => 'Meja 4'],
-        ];
+        $menuList = MenuModel::find()
+            ->joinWith('kategori')
+            ->all();
 
-        $kategoriList = [
-            ['id' => 1, 'nama' => 'Makanan', 'icon' => '🍜'],
-            ['id' => 2, 'nama' => 'Minuman', 'icon' => '🥤'],
-        ];
-
-        $menuList = [
-            1 => [
-                ['id' => 101, 'nama' => 'Nasi Goreng', 'harga' => 20000],
-                ['id' => 102, 'nama' => 'Mie Ayam', 'harga' => 15000],
-            ],
-            2 => [
-                ['id' => 201, 'nama' => 'Es Teh', 'harga' => 5000],
-                ['id' => 202, 'nama' => 'Kopi', 'harga' => 8000],
-            ]
-        ];
         $this->layout = 'main-menu'; 
         return $this->render('index', [
-            'mejaList' => $mejaList,
-            'kategoriList' => $kategoriList,
             'menuList' => $menuList,
         ]);
     }
@@ -102,7 +96,7 @@ class SiteController extends Controller
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+            return $this->redirect($this->getRedirectByRole(Yii::$app->user->identity->role));
         }
 
         $this->layout = 'main-login'; // Set a specific layout for the login page
@@ -111,18 +105,10 @@ class SiteController extends Controller
         $user = User::findOne(['username' => $model->username]);
 
         if ($user && $user->validatePassword($model->password)) {
-        Yii::$app->user->login($user);
+            Yii::$app->user->login($user);
 
-        // Redirect based on role
-        if ($user->role === 'admin') {
-                return $this->redirect(['beranda/index']);
-            } elseif ($user->role === 'kasir') {
-                return $this->redirect(['beranda/kasir']);
-            } elseif ($user->role === 'koki') {
-                return $this->redirect(['beranda/koki']);
-            } else {
-                return $this->goBack();
-            }
+            // arahkan sesuai role
+            return $this->redirect($this->getRedirectByRole($user->role));
         }
 
         Yii::$app->session->setFlash('error', 'Username atau password salah.');
@@ -145,6 +131,26 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+
+    public function actionCheckout()
+    {
+    $cartData = Yii::$app->request->post('cart_data');
+    $cart = json_decode($cartData, true);
+
+    if (!$cart) {
+        Yii::$app->session->setFlash('error', 'Keranjang kosong.');
+        return $this->redirect(['site/index']);
+    }
+
+    // simpan ke session biar bisa dipakai lagi
+    Yii::$app->session->set('cart', $cart);
+
+    $mejaList = MejaModel::find()->all();
+    return $this->render('checkout', [
+        'cart' => $cart,
+        'mejaList' => $mejaList,
+    ]);
     }
 
     /**

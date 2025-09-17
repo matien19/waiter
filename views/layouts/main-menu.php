@@ -7,6 +7,12 @@ use yii\helpers\Url;
 
 $this->registerCssFile('https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css');
 $this->registerCssFile('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css');
+
+$assetDir = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
+
+$publishedRes = Yii::$app->assetManager->publish('@vendor/hail812/yii2-adminlte3/src/web/js');
+$this->registerJsFile($publishedRes[1].'/control_sidebar.js', ['depends' => '\hail812\adminlte3\assets\AdminLteAsset']);
+$this->registerJsFile('https://cdn.jsdelivr.net/npm/chart.js', ['position' => \yii\web\View::POS_END]);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -47,14 +53,37 @@ $this->registerCssFile('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.
             font-weight: bold;
             color: #28a745;
         }
+
+        .jumbotron {
+            background: url('<?= Yii::getAlias('@web/img/bg.png') ?>') no-repeat center center;
+            background-size: cover;
+            height: 100vh;
+            margin-bottom: 30px;
+        }
     </style>
 </head>
 <body>
 <?php $this->beginBody() ?>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center" href="<?= Url::home() ?>">
+            <img src="<?= Yii::getAlias('@web/img/logo.png') ?>" 
+                 alt="Logo" width="40" height="40" class="me-2">
+            <span><?= Html::encode($this->title ?: 'POS Waiters') ?></span>
+        </a>
+    </div>
+</nav>
 
 <div class="container-fluid">
     <?= $content ?>
 </div>
+
+<footer>
+    <div class="text-center p-3 bg-dark text-white mt-4">
+        &copy; <?= date('Y') ?> POS Waiters. All rights reserved.
+    </div>
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <?php $this->endBody() ?>
