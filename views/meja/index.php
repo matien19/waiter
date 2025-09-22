@@ -45,6 +45,50 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
 
             <?php ActiveForm::end(); ?>
+             <?php Pjax::begin(); ?>
+
+            <?= GridView::widget([
+                'dataProvider' => $dataProvider,
+                'filterModel' => $searchModel,
+                'columns' => [
+                    [
+                        'class' => 'yii\grid\SerialColumn',
+                        'header' => 'No',
+                    ],
+                    [
+                        'attribute' => 'no_meja',
+                        'label' => 'Nomor Meja',
+                    ],
+                    [
+                        'label' => 'QR Code',
+                        'format' => 'raw',
+                        'value' => function ($model) {
+                            $url = Yii::$app->urlManager->createAbsoluteUrl([
+                                'site/index',
+                                'id_meja' => $model->id,
+                            ]);
+
+                            // QR dari Google Chart
+                            $qrUrl = "https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=" . urlencode($url);
+
+                            return Html::img($qrUrl, ['alt' => 'QR', 'width' => '100']);
+                        },
+                    ],
+                    [
+                        'label' => 'Link',
+                        'format' => 'raw',
+                        'value' => function ($model) {
+                            $url = Yii::$app->urlManager->createAbsoluteUrl([
+                                'site/index',
+                                'no_meja' => $model->no_meja,
+                            ]);
+                            return Html::a('Buka Link', $url, ['target' => '_blank']);
+                        },
+                    ],
+                ],
+            ]); ?>
+
+            <?php Pjax::end(); ?>
         </div>
     </div>
 </div>

@@ -14,6 +14,20 @@ $this->title = "POS Waiters";
 </div>
 <section>
     <div class="row">
+        <?php if (Yii::$app->session->hasFlash('error')): ?>
+            <div class="col-12">
+                <div class="alert alert-danger">
+                    <?= Yii::$app->session->getFlash('error') ?>
+                </div>
+            </div>
+        <?php endif; ?>
+        <?php if (Yii::$app->session->hasFlash('success')): ?>
+            <div class="col-12">
+                <div class="alert alert-success">
+                    <?= Yii::$app->session->getFlash('success') ?>
+                </div>
+            </div>
+        <?php endif; ?>
         <h2>Menu</h2>
 
         <!-- Menu List -->
@@ -41,13 +55,15 @@ $this->title = "POS Waiters";
 
         <!-- Cart Panel -->
         <div class="col-md-4 cart-panel">
-            <h5><i class="fas fa-receipt"></i> Pesanan</h5>
+            <h5><i class="fas fa-receipt"></i> Pesanan </h5>
 
             <!-- Form Cart -->
             <form id="cart-form" method="post" action="<?= Url::to(['site/checkout']) ?>">
                 <?= Html::hiddenInput(Yii::$app->request->csrfParam, Yii::$app->request->getCsrfToken()) ?>
                 
                 <ul id="cart-list" class="list-group mb-3"></ul>
+                 <!-- Simpan nomor meja -->
+                <?= Html::hiddenInput('no_meja', Html::encode($no_meja)) ?>
 
                 <div class="d-flex justify-content-between">
                     <span>Total</span>

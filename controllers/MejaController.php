@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\MejaModel;
 use app\models\MejaSearchModel;
+use Endroid\QrCode\Builder\Builder;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -144,4 +145,5 @@ class MejaController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
 }
