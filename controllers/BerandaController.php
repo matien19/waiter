@@ -17,7 +17,7 @@ class BerandaController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['logout', 'index', 'dashboard', 'siswa'],
+                'only' => ['logout', 'index', 'dashboard', 'koki', 'kasir'],
                 'rules' => [
                     [
                         'actions' => ['login', 'error'],
@@ -28,15 +28,26 @@ class BerandaController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return Yii::$app->user->identity->role === 'staf' || Yii::$app->user->identity->role === 'admin';
+                            // Hanya admin yang bisa akses index & dashboard
+                            return in_array(Yii::$app->user->identity->role, ['admin']);
                         },
                     ],
                     [
-                        'actions' => ['siswa'],
+                        'actions' => ['koki'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return in_array(Yii::$app->user->identity->role, ['siswa', 'calon_siswa']);
+                            // Hanya koki yang bisa akses koki
+                            return Yii::$app->user->identity->role === 'koki';
+                        },
+                    ],
+                    [
+                        'actions' => ['kasir'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            // Hanya kasir yang bisa akses kasir
+                            return Yii::$app->user->identity->role === 'kasir';
                         },
                     ],
                 ],
@@ -49,6 +60,7 @@ class BerandaController extends Controller
             ],
         ];
     }
+
 
     /**
      * {@inheritdoc}
@@ -74,6 +86,10 @@ class BerandaController extends Controller
     public function actionKoki()
     {
         return $this->render('/beranda/koki');
+    }
+    public function actionKasir()
+    {
+        return $this->render('/beranda/kasir');
     }
     
 }

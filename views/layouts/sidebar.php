@@ -34,13 +34,16 @@
         <nav class="mt-2">
             <?php
 
-                                            use app\models\KategoriModel;
+                                            use hail812\adminlte\widgets\Menu;
 
             $userRole = Yii::$app->user->identity->role ?? '';
             $menuItems = [];
             if ($userRole == 'admin') {
                 $menuItems[] = ['label' => 'Beranda', 'icon' => 'tachometer-alt', 'url' => ['beranda/index']];
+                $menuItems[] = ['label' => 'Pesanan', 'icon' => 'clipboard-list', 'url' => ['pesanan/index']];
+                $menuItems[] = ['label' => 'Laporan', 'icon' => 'chart-line', 'url' => ['laporan/index']];
 
+                
                 if ($userRole == 'admin') {
                     $menuItems[] = [
                         'label' => 'Master Data',
@@ -70,12 +73,6 @@
                                 'url' => ['kategori/index'],
                                 'active' => Yii::$app->controller->id === 'kategori',
                             ],
-                            // [
-                            //     'label' => 'Kategori',
-                            //     'iconStyle' => 'far',
-                            //     'url' => ['kategori/index'],
-                            //     'active' => Yii::$app->controller->id === 'kategori',
-                            // ],
                             [
                                 'label' => 'Menu',
                                 'iconStyle' => 'far',
@@ -85,15 +82,23 @@
                         ],
                     ];
                 }
- 
-            } else {
+
+
+            } elseif($userRole == 'kasir') {
                 $menuItems = [
                     ['label' => 'Beranda', 'icon' => 'tachometer-alt', 'url' => ['beranda/kasir']],
+                    ['label' => 'Pesanan', 'icon' => 'clipboard-list', 'url' => ['pesanan/index']],
+                    ['label' => 'Laporan', 'icon' => 'chart-line', 'url' => ['laporan/index']],
                 ];
                 
+            } else{
+                $menuItems = [
+                    ['label' => 'Beranda', 'icon' => 'tachometer-alt', 'url' => ['beranda/koki']],
+                    ['label' => 'Pesanan', 'icon' => 'clipboard-list', 'url' => ['pesanan/index']],
+                ];
             }
 
-            echo \hail812\adminlte\widgets\Menu::widget([
+            echo Menu::widget([
                 'items' => $menuItems,
             ]);
             ?>

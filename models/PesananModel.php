@@ -51,7 +51,8 @@ class PesananModel extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'meja_id' => 'Meja ID',
+            'nama' => 'Nama Pemesan',
+            'meja_id' => 'No. Meja',
             'waktu' => 'Waktu',
             'status_pesanan' => 'Status Pesanan',
         ];
@@ -116,5 +117,9 @@ class PesananModel extends \yii\db\ActiveRecord
     public function setStatusPesananToTerbayar()
     {
         $this->status_pesanan = self::STATUS_PESANAN_TERBAYAR;
+    }
+
+    public function getPesananDetails() {
+        return $this->hasMany(DetailPesananModel::class, ['pesanan_id' => 'id']);
     }
 }

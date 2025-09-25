@@ -11,7 +11,7 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
             <h3 class="card-title"><?= Html::encode($this->title) ?></h3>
         </div>
         <div class="card-body">
-            <p>Selamat datang, KOKI! Berikut adalah ringkasan data sistem:</p>
+            <p>Selamat datang, KASIR! Berikut adalah ringkasan data sistem:</p>
 
         </div>
     </div>
