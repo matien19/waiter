@@ -4,6 +4,8 @@ namespace app\controllers;
 
 use app\models\MenuModel;
 use app\models\MenuSearchModel;
+use app\models\TagihanSearchModel;
+use Mpdf\Mpdf;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -104,8 +106,21 @@ class MenuController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $file = UploadedFile::getInstance($model, 'gambar');
+            if ($file) {
+                $fileName = 'menu_' . time() . '.' . $file->extension;
+                $folder = 'uploads/';
+                if (!is_dir($folder)) {
+                    mkdir($folder, 0777, true);
+                }
+                $file->saveAs($folder . $fileName); // simpan ke folder "uploads"
+                $model->gambar = $fileName; // simpan nama file ke DB
+            }
+
+            if ($model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('update', [

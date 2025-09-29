@@ -40,6 +40,15 @@ $totalSemua = (int) $query->sum('total');
                         <?= Html::a('Reset', ['index'], ['class' => 'btn btn-secondary ms-2 mt-4']) ?>
                     </div>
                 </div>
+                <div class="mb-3">
+                    <?= Html::a('<i class="fas fa-file-pdf"></i> Cetak PDF', 
+                        ['laporan/pdf', 
+                            'date_start' => $searchModel->date_start, 
+                            'date_end' => $searchModel->date_end
+                        ], 
+                        ['class' => 'btn btn-danger', 'target' => '_blank']) ?>
+                </div>
+
                 <?php ActiveForm::end(); ?>
                 <?= GridView::widget([
                     'dataProvider' => $dataProvider,

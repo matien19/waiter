@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\TagihanModel;
 use app\models\TagihanSearchModel;
+use Mpdf\Mpdf;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -55,5 +56,31 @@ class LaporanController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+
+    
+    public function actionPdf($date_start = null, $date_end = null)
+    {
+        $searchModel = new TagihanSearchModel();
+        $dataProvider = $searchModel->search([
+            'TagihanSearchModel' => [
+                'date_start' => $date_start,
+                'date_end' => $date_end,
+            ]
+        ]);
+        $dataProvider->pagination = false;
+
+        $query = clone $dataProvider->query;
+        $totalSemua = (int) $query->sum('total');
+
+        $content = $this->renderPartial('_laporan_pdf', [
+            'dataProvider' => $dataProvider,
+            'totalSemua' => $totalSemua,
+            'searchModel' => $searchModel,
+        ]);
+
+        $pdf = new Mpdf();
+        $pdf->WriteHTML($content);
+        return $pdf->Output('Laporan-Pemasukan.pdf', 'I');
     }
 }
