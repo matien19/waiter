@@ -68,10 +68,14 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'id_meja' => $model->id,
                             ]);
 
-                            // QR dari Google Chart
-                            $qrUrl = "https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=" . urlencode($url);
-
-                            return Html::img($qrUrl, ['alt' => 'QR', 'width' => '100']);
+                            return '<div id="qrcode-' . $model->id . '"></div>
+                                    <script>
+                                        new QRCode(document.getElementById("qrcode-' . $model->id . '"), {
+                                            text: "' . $url . '",
+                                            width: 100,
+                                            height: 100
+                                        });
+                                    </script>'; 
                         },
                     ],
                     [
@@ -82,7 +86,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'site/index',
                                 'no_meja' => $model->no_meja,
                             ]);
-                            return Html::a('Buka Link', $url, ['target' => '_blank']);
+                            return Html::a($url, $url, ['target' => '_blank', 'rel' => 'noopener noreferrer']);
                         },
                     ],
                 ],

@@ -5,6 +5,7 @@
 
 use yii\helpers\Html;
 use yii\bootstrap4\BootstrapAsset;
+use yii\web\JqueryAsset;
 
 BootstrapAsset::register($this);
 \hail812\adminlte3\assets\FontAwesomeAsset::register($this);
@@ -17,6 +18,7 @@ $publishedRes = Yii::$app->assetManager->publish('@vendor/hail812/yii2-adminlte3
 $this->registerJsFile($publishedRes[1].'/control_sidebar.js', ['depends' => '\hail812\adminlte3\assets\AdminLteAsset']);
 $this->registerJsFile('https://cdn.jsdelivr.net/npm/chart.js', ['position' => \yii\web\View::POS_END]);
 $this->registerJsFile('//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js', ['position' => \yii\web\View::POS_HEAD]);
+$this->registerJsFile("https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js", ['position' => \yii\web\View::POS_HEAD]);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
